@@ -24,7 +24,7 @@ module "secrets" {
   secret_ids_list = var.secret_ids
 }
 
-# https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/blob/master/examples/safer_cluster/main.tf
+# google safer cluster module
 resource "random_string" "suffix" {
   length  = 4
   special = false
@@ -39,8 +39,7 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(module.gke.ca_certificate)
 }
 
-// A random valid k8s version is retrieved
-// to specify as an explicit version.
+// A random valid k8s version is retrieved to specify as an explicit version.
 data "google_container_engine_versions" "current" {
   project  = var.project_id
   location = var.region
@@ -52,7 +51,7 @@ resource "random_shuffle" "version" {
 }
 
 module "gke" {
-  source                     = "terraform-google-modules/kubernetes-engine/google//modules/safer-cluster"
+  source = "terraform-google-modules/kubernetes-engine/google//modules/safer-cluster"
   # version                    = "28.0.0"
   project_id                 = var.project_id
   name                       = "${local.cluster_type}-cluster-${random_string.suffix.result}"
@@ -69,7 +68,11 @@ module "gke" {
   kubernetes_version         = random_shuffle.version.result[0]
   release_channel            = "UNSPECIFIED"
   gateway_api_channel        = "CHANNEL_STANDARD"
+  # authorize registry access
+  registry_project_ids  = [var.registry_project_id]
+  grant_registry_access = true
 
+  # authorize network for users to run kubectl commands against cluster
   master_authorized_networks = [
     {
       cidr_block   = "10.60.0.0/17"

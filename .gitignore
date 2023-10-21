@@ -1,2 +1,4 @@
 *.crt
 *.key
+app-csr.conf
+app.csr

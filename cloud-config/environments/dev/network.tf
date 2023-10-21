@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-module "gcp-network" {
+module "gcp_network" {
   source  = "terraform-google-modules/network/google"
   version = ">= 4.0.1"
 

@@ -1,15 +1,12 @@
 locals {
-  env = "dev"
-}
-
-locals {
-  cluster_type           = "safer-cluster"
-  network_name           = "safer-cluster-network-${random_string.suffix.result}"
+  env                    = "dev"
+  cluster_name           = "safer-cluster"
+  network_name           = "safer-cluster-network-${local.env}"
   subnet_name            = "safer-cluster-subnet"
   master_auth_subnetwork = "safer-cluster-master-subnet"
-  pods_range_name        = "ip-range-pods-${random_string.suffix.result}"
-  svc_range_name         = "ip-range-svc-${random_string.suffix.result}"
-  subnet_names           = [for subnet_self_link in module.gcp-network.subnets_self_links : split("/", subnet_self_link)[length(split("/", subnet_self_link)) - 1]]
+  pods_range_name        = "ip-range-pods-${local.env}"
+  svc_range_name         = "ip-range-svc-${local.env}"
+  subnet_names           = [for subnet_self_link in module.gcp_network.subnets_self_links : split("/", subnet_self_link)[length(split("/", subnet_self_link)) - 1]]
   node_count             = 1
 }
 
@@ -17,6 +14,10 @@ provider "google" {
   project = var.project_id
 }
 
+# TODO: https://registry.terraform.io/modules/terraform-google-modules/project-factory/google/latest
+# - create service project, link to shared vpc host project, enable APIs
+
+# create secrets (without versions for security purpose)
 module "secrets" {
   source          = "../../modules/secrets"
   project_id      = var.project_id
@@ -25,12 +26,6 @@ module "secrets" {
 }
 
 # google safer cluster module
-resource "random_string" "suffix" {
-  length  = 4
-  special = false
-  upper   = false
-}
-
 data "google_client_config" "default" {}
 
 provider "kubernetes" {
@@ -39,43 +34,30 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(module.gke.ca_certificate)
 }
 
-// A random valid k8s version is retrieved to specify as an explicit version.
-data "google_container_engine_versions" "current" {
-  project  = var.project_id
-  location = var.region
-}
-
-resource "random_shuffle" "version" {
-  input        = data.google_container_engine_versions.current.valid_master_versions
-  result_count = 1
-}
-
 module "gke" {
   source = "terraform-google-modules/kubernetes-engine/google//modules/safer-cluster"
   # version                    = "28.0.0"
   project_id                 = var.project_id
-  name                       = "${local.cluster_type}-cluster-${random_string.suffix.result}"
+  name                       = "${local.cluster_name}-${local.env}"
   regional                   = true
   region                     = var.region
-  network                    = module.gcp-network.network_name
-  subnetwork                 = local.subnet_names[index(module.gcp-network.subnets_names, local.subnet_name)]
+  network                    = module.gcp_network.network_name
+  subnetwork                 = local.subnet_names[index(module.gcp_network.subnets_names, local.subnet_name)]
   initial_node_count         = local.node_count
   ip_range_pods              = local.pods_range_name
   ip_range_services          = local.svc_range_name
   master_ipv4_cidr_block     = "172.16.0.0/28"
   add_cluster_firewall_rules = true
   firewall_inbound_ports     = ["9443", "15017"]
-  kubernetes_version         = random_shuffle.version.result[0]
+  kubernetes_version         = "latest"
   release_channel            = "UNSPECIFIED"
   gateway_api_channel        = "CHANNEL_STANDARD"
-  # authorize registry access
   registry_project_ids  = [var.registry_project_id]
   grant_registry_access = true
 
-  # authorize network for users to run kubectl commands against cluster
   master_authorized_networks = [
     {
-      cidr_block   = "10.60.0.0/17"
+      cidr_block   = var.master_auth_cidrs
       display_name = "VPC"
     },
   ]
@@ -84,6 +66,17 @@ module "gke" {
 }
 
 resource "google_pubsub_topic" "updates" {
-  name    = "cluster-updates-${random_string.suffix.result}"
+  name    = "cluster-updates-${local.env}"
   project = var.project_id
+}
+
+# bastion host to access cluster
+module "iap_bastion" {
+  source = "terraform-google-modules/bastion-host/google"
+
+  project = var.project_id
+  zone    = var.zone
+  network = module.gcp_network.network_self_link
+  subnet  = module.gcp_network.subnets_self_links[0]
+  members = var.bastion_users
 }

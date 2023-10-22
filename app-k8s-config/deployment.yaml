@@ -54,7 +54,7 @@ spec:
           seccompProfile:
             type: RuntimeDefault
       - name: proxy
-        image: us-central1-docker.pkg.dev/mike-test-cmdb-gke/mike-test-repo/app:v1
+        image: us-central1-docker.pkg.dev/mike-test-cmdb-gke/mike-test-repo/proxy:v1
         resources:
           limits:
             cpu: "125m"

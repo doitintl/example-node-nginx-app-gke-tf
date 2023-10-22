@@ -236,6 +236,7 @@ gcloud compute ssl-certificates describe $CERTIFICATE_NAME \
   
 # create kubernetes TLS secret (when cluster avail)
 kubectl create secret tls app-example-com \
+    --namespace=$KNS \
     --cert=$CERTIFICATE_FILE \
     --key=$PRIVATE_KEY_FILE
 

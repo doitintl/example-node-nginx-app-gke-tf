@@ -288,3 +288,12 @@ gcloud compute routers nats update $NAT_GW_NAME \
 # - https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets
 # - https://github.com/GoogleCloudPlatform/secrets-store-csi-driver-provider-gcp 
 # - https://cloud.google.com/secret-manager/docs/access-secret-version
+
+# access bastion and apply k8s configs
+export BASTION_NAME="bastion-vm"
+export BASTION_ZONE="us-central1-c"
+
+gcloud compute ssh $BASTION_NAME --zone $BASTION_ZONE
+
+# from bastion, test gateway internal IP and TLS works with curl
+curl -k https://app.example.com --resolve 'app.example.com:443:10.0.0.9'

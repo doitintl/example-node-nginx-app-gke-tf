@@ -4,6 +4,7 @@ locals {
   network_name           = "safer-cluster-network-${local.env}"
   subnet_name            = "safer-cluster-subnet"
   master_auth_subnetwork = "safer-cluster-master-subnet"
+  proxy_only_subnetwork  = "safer-cluster-proxy-subnet"
   pods_range_name        = "ip-range-pods-${local.env}"
   svc_range_name         = "ip-range-svc-${local.env}"
   subnet_names           = [for subnet_self_link in module.gcp_network.subnets_self_links : split("/", subnet_self_link)[length(split("/", subnet_self_link)) - 1]]
@@ -72,14 +73,14 @@ resource "google_pubsub_topic" "updates" {
 }
 
 # nat gateway if nodes/bastion need to reach public internet
-module "cloud-nat" {
-  source     = "terraform-google-modules/cloud-nat/google"
-  version    = "~> 1.2"
-  project_id = var.project_id
-  region     = var.region
-  network    = module.gcp_network.network_name
-  router     = google_compute_router.router.name
-}
+# module "cloud-nat" {
+#   source     = "terraform-google-modules/cloud-nat/google"
+#   version    = "~> 1.2"
+#   project_id = var.project_id
+#   region     = var.region
+#   network    = module.gcp_network.network_name
+#   router     = google_compute_router.router.name
+# }
 
 # bastion host to access cluster
 module "iap_bastion" {

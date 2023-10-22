@@ -32,6 +32,13 @@ module "gcp_network" {
       subnet_ip     = "10.60.0.0/17"
       subnet_region = var.region
     },
+    {
+      subnet_name   = local.proxy_only_subnetwork
+      subnet_ip     = "10.100.0.0/23"
+      subnet_region = var.region
+      purpose = "REGIONAL_MANAGED_PROXY"
+      role = "ACTIVE"
+    },
   ]
 
   secondary_ranges = {

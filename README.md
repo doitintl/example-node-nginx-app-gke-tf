@@ -5,8 +5,11 @@ This repository includes examples to bootstrap a Google Cloud environment (proje
 - `app` (test nodejs app accessing Secret Manager secrets)
   - rough example to interact with Secret Manager, and `Dockerfile` with multi-stage build to optimize image
 - `app-k8s-config` (K8S manifest files to run app on GKE)
-  - configuring namespace for Pod Security Admission to enforce on cluster
-  - configuring namespace and service account for Workload Identity to auth pod to access secrets
+  - configuring `namespace` for Pod Security Admission to enforce on cluster
+  - configuring `namespace` and service account for Workload Identity to auth pod to access secrets
+  - configuring `deployment` with multiple containers in one pod, with security and env var settings
+  - configuring `service` to expose app
+  - configuring `gateway` to expose and load balance service (internal only)
 - `app-proxy` (nginx proxy example in front of node app)
   - example building unprivileged NGINX proxy bundled with custom config
 - `cloud-config` (TF files to provision cloud infra)
@@ -29,5 +32,6 @@ This repository includes examples to bootstrap a Google Cloud environment (proje
   - configures IAM policies for app service account to test app
   - builds and deploys `Dockerfile` for app/proxy, pushing to Artifact Registry
   - test `gcloud` commands to run app in Cloud Run, etc.
+  - commands to generate self-signed certificate for testing ILB in GKE Gateway
 
 # TODO: more to come ...

@@ -20,10 +20,14 @@ This repository includes examples to bootstrap a Google Cloud environment (proje
   - TF example of `dev` env provisioning:
     - custom module provisioning a list of Secret Manager secrets
     - secure GKE cluster leveraging Google "safer-cluster" module
+      - [Documentation](https://registry.terraform.io/modules/terraform-google-modules/kubernetes-engine/google/latest/submodules/safer-cluster)
       - offers support for Shared VPC networking
     - secure bastion host leveraging Google "bastion" module
+      - [Documentation](https://registry.terraform.io/modules/terraform-google-modules/bastion-host/google/latest)
     - Cloud Nat example if apps need to reach public Internet (cluster is private)
+      - [Documentation](https://github.com/terraform-google-modules/terraform-google-cloud-nat)
     - (optional) example of Project Factory module
+      - [Documentation](https://registry.terraform.io/modules/terraform-google-modules/project-factory/google/latest)
 - `setup.sh` (test commands to bootstrap infra, and test above)
   - sets up local shell (in my case Apple Silicon Mac) and env vars
   - illustrates authenticating to run TF commands without long-lived key using short-lived tokens

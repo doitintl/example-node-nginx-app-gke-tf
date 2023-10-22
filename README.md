@@ -6,7 +6,7 @@ This repository includes examples to bootstrap a Google Cloud environment (proje
   - rough example to interact with Secret Manager, and `Dockerfile` with multi-stage build to optimize image
 - `app-k8s-config` (K8S manifest files to run app on GKE)
   - configuring `namespace` for Pod Security Admission to enforce on cluster
-  - configuring `namespace` and service account for Workload Identity to auth pod to access secrets
+  - configuring `namespace` and `service account` for Workload Identity to auth pod to access secrets
   - configuring `deployment` with multiple containers in one pod, with security and env var settings
   - configuring `service` to expose app
   - configuring `gateway` to expose and load balance service (internal only)

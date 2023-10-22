@@ -87,6 +87,8 @@ gcloud secrets versions access $VERSION_ID --secret=$SECRET_ID
 ############################################################
 export SA_NAME="app-sa"
 export SA_EMAIL="$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com"
+export KNS = "app-ns" # kubernetes namespace
+export KSA = "app-sa" # kubernetes service account
 
 # create service account
 gcloud iam service-accounts create $SA_NAME \
@@ -109,7 +111,7 @@ gcloud secrets add-iam-policy-binding $SECRET_ID \
 # grant workload identity to sa for k8s binding
 gcloud iam service-accounts add-iam-policy-binding $SA_EMAIL \
     --role roles/iam.workloadIdentityUser \
-    --member "serviceAccount:$PROJECT_ID.svc.id.goog[app-ns/app-sa]"
+    --member "serviceAccount:$PROJECT_ID.svc.id.goog[$KNS/$KSA]"
 
 
 ############################################################

@@ -8,7 +8,7 @@ metadata:
     pod-security.kubernetes.io/enforce: restricted
     pod-security.kubernetes.io/enforce-version: v1.28
   annotations:
-    iam.gke.io/gcp-service-account: tf-gke-safer-cluster-d-xqt1@mike-test-cmdb-gke.iam.gserviceaccount.com
+    iam.gke.io/gcp-service-account: app-sa@mike-test-cmdb-gke.iam.gserviceaccount.com
 ---
 # pod-security example
 apiVersion: v1

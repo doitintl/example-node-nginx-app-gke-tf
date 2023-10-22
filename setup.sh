@@ -26,17 +26,19 @@ export IDNS=${PROJECT_ID}.svc.id.goog # workflow identity domain
 
 export GCP_REGION="us-central1" # CHANGEME (OPT)
 export GCP_ZONE="us-central1-a" # CHANGEME (OPT)
-export NETWORK_NAME="default"
+export NETWORK_NAME="safer-cluster-network-dev"
 
 # enable apis
 gcloud services enable compute.googleapis.com \
+    oslogin.googleapis.com \
     container.googleapis.com \
     containersecurity.googleapis.com \
     secretmanager.googleapis.com \
     artifactregistry.googleapis.com \
     cloudbuild.googleapis.com \
     storage.googleapis.com \
-    run.googleapis.com
+    run.googleapis.com \
+    iap.googleapis.com
 
 # configure gcloud sdk
 gcloud config set compute/region $GCP_REGION
@@ -103,6 +105,11 @@ gcloud secrets add-iam-policy-binding $SECRET_ID \
 gcloud secrets add-iam-policy-binding $SECRET_ID \
     --member="serviceAccount:$SA_EMAIL" \
     --role="roles/secretmanager.secretAccessor"
+
+# grant workload identity to sa for k8s binding
+gcloud iam service-accounts add-iam-policy-binding $SA_EMAIL \
+    --role roles/iam.workloadIdentityUser \
+    --member "serviceAccount:$PROJECT_ID.svc.id.goog[app-ns/app-sa]"
 
 
 ############################################################
@@ -229,6 +236,35 @@ gcloud compute ssl-certificates describe $CERTIFICATE_NAME \
 kubectl create secret tls app-example-com \
     --cert=$CERTIFICATE_FILE \
     --key=$PRIVATE_KEY_FILE
+
+
+
+######### NAT GATEWAY FOR TESTING BASTION ############
+export NAT_GW_IP="nat-gw-ip"
+export CLOUD_ROUTER_NAME="router-1"
+export CLOUD_ROUTER_ASN="64523"
+export NAT_GW_NAME="nat-gateway-1"
+
+# create IP address
+gcloud compute addresses create $NAT_GW_IP --region $GCP_REGION
+
+# create cloud router and nat gateway
+gcloud compute routers create $CLOUD_ROUTER_NAME \
+    --network $NETWORK_NAME \
+    --asn $CLOUD_ROUTER_ASN \
+    --region $GCP_REGION
+
+gcloud compute routers nats create $NAT_GW_NAME \
+    --router=$CLOUD_ROUTER_NAME \
+    --region=$GCP_REGION \
+    --auto-allocate-nat-external-ips \
+    --nat-all-subnet-ip-ranges \
+    --enable-logging
+
+# change to static IP (test)
+gcloud compute routers nats update $NAT_GW_NAME \
+    --router=$CLOUD_ROUTER_NAME \
+    --nat-external-ip-pool=$NAT_GW_IP
 
 
 

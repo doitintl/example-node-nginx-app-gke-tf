@@ -2,12 +2,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-deployment
+  name: app
+  namespace: app-ns
   labels:
     app: app
-    namespace: app-ns
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: app
@@ -16,48 +16,61 @@ spec:
       labels:
         app: app
     spec:
-      containers:
-        - name: app
-          image: us-central1-docker.pkg.dev/mike-test-cmdb-gke/mike-test-repo/app:v1
-          env:
-            - name: PROJECT_ID
-              value: mike-test-cmdb-gke
-            - name: SECRET_ID
-              value: foo
-            - name: SECRET_VERSION_ID
-              value: latest
-            - name: PORT
-              value: "3000"
-          resources:
-            limits:
-              cpu: 250m
-              memory: 1Gi
-            requests:
-              cpu: 250m
-              memory: 1Gi
-          ports:
-            - containerPort: 3000
-        - name: nginx
-          image: nginxinc/nginx-unprivileged:1.25.2-alpine
-          resources:
-            limits:
-              cpu: 250m
-              memory: 500Mb
-            requests:
-              cpu: 250m
-              memory: 500Mb
-          ports:
-            - containerPort: 8080
-          volumeMounts:
-            - name: nginx-config
-              mountPath: /etc/nginx/nginx.conf
-              subPath: nginx.conf
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 2000
         fsGroup: 3000
-      volumes:
-        - name: nginx-config
-          configMap:
-            name: nginx-configmap
+      # volumes:
+      #   - name: nginx-config
+      #     configMap:
+      #       name: nginx-conf
+      serviceAccountName: app-sa
+      containers:
+      - name: app
+        image: us-central1-docker.pkg.dev/mike-test-cmdb-gke/mike-test-repo/app:v1
+        env:
+        - name: PROJECT_ID
+          value: mike-test-cmdb-gke
+        - name: SECRET_ID
+          value: foo
+        - name: SECRET_VERSION_ID
+          value: latest
+        - name: PORT
+          value: "3000"
+        resources:
+          limits:
+            cpu: "125m"
+            memory: "500Mi"
+          requests:
+            cpu: "125m"
+            memory: "500Mi"
+        ports:
+        - containerPort: 3000
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
+          seccompProfile:
+            type: RuntimeDefault
+      - name: proxy
+        image: us-central1-docker.pkg.dev/mike-test-cmdb-gke/mike-test-repo/app:v1
+        resources:
+          limits:
+            cpu: "125m"
+            memory: "500Mi"
+          requests:
+            cpu: "125m"
+            memory: "500Mi"
+        ports:
+          - containerPort: 8080
+        # volumeMounts:
+        #   - name: nginx-config
+        #     mountPath: /etc/nginx/nginx.conf
+        #     subPath: nginx.conf
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
+          seccompProfile:
+            type: RuntimeDefault

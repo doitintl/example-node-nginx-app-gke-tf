@@ -52,8 +52,9 @@ module "gke" {
   kubernetes_version         = "latest"
   release_channel            = "UNSPECIFIED"
   gateway_api_channel        = "CHANNEL_STANDARD"
-  registry_project_ids  = [var.registry_project_id]
-  grant_registry_access = true
+  registry_project_ids       = [var.registry_project_id]
+  grant_registry_access      = true
+  #enable_private_endpoint    = false
 
   master_authorized_networks = [
     {
@@ -68,6 +69,16 @@ module "gke" {
 resource "google_pubsub_topic" "updates" {
   name    = "cluster-updates-${local.env}"
   project = var.project_id
+}
+
+# nat gateway if nodes/bastion need to reach public internet
+module "cloud-nat" {
+  source     = "terraform-google-modules/cloud-nat/google"
+  version    = "~> 1.2"
+  project_id = var.project_id
+  region     = var.region
+  network    = module.gcp_network.network_name
+  router     = google_compute_router.router.name
 }
 
 # bastion host to access cluster

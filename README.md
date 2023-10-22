@@ -6,10 +6,17 @@ This repository includes examples to bootstrap a Google Cloud environment (proje
   - rough example to interact with Secret Manager, and `Dockerfile` with multi-stage build to optimize image
 - `app-k8s-config` (K8S manifest files to run app on GKE)
   - configuring `namespace` for Pod Security Admission to enforce on cluster
+    - [Documentation](https://cloud.google.com/kubernetes-engine/docs/how-to/podsecurityadmission)
+    - [Alternatives](https://cloud.google.com/kubernetes-engine/docs/how-to/podsecurityadmission#alternatives)
   - configuring `namespace` and `service account` for Workload Identity to auth pod to access secrets
+    - [Documentation](https://cloud.google.com/kubernetes-engine/docs/concepts/workload-identity)
+    - [Usage](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity)
   - configuring `deployment` with multiple containers in one pod, with security and env var settings
+    - [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+    - [Service Accounts](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/)
   - configuring `service` to expose app
   - configuring `gateway` to expose and load balance service (internal only)
+    - [Documentation](https://cloud.google.com/kubernetes-engine/docs/how-to/secure-gateway)
 - `app-proxy` (nginx proxy example in front of node app)
   - example building unprivileged NGINX proxy bundled with custom config
 - `cloud-config` (TF files to provision cloud infra)
@@ -37,5 +44,7 @@ This repository includes examples to bootstrap a Google Cloud environment (proje
   - builds and deploys `Dockerfile` for app/proxy, pushing to Artifact Registry
   - test `gcloud` commands to run app in Cloud Run, etc.
   - commands to generate self-signed certificate for testing ILB in GKE Gateway
+  - create Cloud Nat for bastion to interact with metadata server
+    - see also Private Access
 
 # TODO: more to come ...

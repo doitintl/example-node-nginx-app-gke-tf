@@ -55,6 +55,7 @@ spec:
             type: RuntimeDefault
       - name: proxy
         image: us-central1-docker.pkg.dev/mike-test-cmdb-gke/mike-test-repo/proxy:v1
+        # image: nginxinc/nginx-unprivileged:1.25.2-alpine
         resources:
           limits:
             cpu: "125m"

@@ -17,6 +17,7 @@
 # - https://kubernetes.io/blog/2021/11/09/non-root-containers-and-devices/
 # - https://cloud.google.com/kubernetes-engine/docs/concepts/gateway-security
 # - https://cloud.google.com/kubernetes-engine/docs/how-to/secure-gateway#secure-using-secret
+# - https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 #####################################################################
 
 export PROJECT_ID=$(gcloud config get-value project)

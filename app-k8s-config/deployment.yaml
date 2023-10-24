@@ -47,6 +47,16 @@ spec:
             memory: "500Mi"
         ports:
         - containerPort: 3000
+        readinessProbe:
+          tcpSocket:
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 10
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -65,6 +75,16 @@ spec:
             memory: "500Mi"
         ports:
           - containerPort: 8080
+        readinessProbe:
+          tcpSocket:
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 10
         # volumeMounts:
         #   - name: nginx-config
         #     mountPath: /etc/nginx/nginx.conf

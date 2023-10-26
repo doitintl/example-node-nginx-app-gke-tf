@@ -2,8 +2,10 @@
 # Manual edits may be lost in future updates.
 
 provider "registry.terraform.io/hashicorp/google" {
-  version = "4.82.0"
+  version     = "4.82.0"
+  constraints = ">= 3.33.0, >= 3.43.0, >= 3.53.0, >= 3.83.0, >= 4.25.0, >= 4.64.0, != 4.65.0, != 4.65.1, >= 4.76.0, < 5.0.0"
   hashes = [
+    "h1:L5uRqRT63VLPVHzd57xMkNmLf+liFVt7KxcdZNwWmxA=",
     "h1:yobHGNuj2Z0WDd3w5QD4KX1x7+zP/1u13Khe1pCYz1Y=",
     "zh:057948f706d110fbc1ca87a6d1b84ce371001e1ddbb2a46a97e111a504afa563",
     "zh:199fa8cc4c861514218f47ae46983788e82c92f919442052991a246e20618b15",
@@ -22,9 +24,10 @@ provider "registry.terraform.io/hashicorp/google" {
 
 provider "registry.terraform.io/hashicorp/google-beta" {
   version     = "4.84.0"
-  constraints = "!= 4.65.0, != 4.65.1, >= 4.76.0, < 5.0.0"
+  constraints = ">= 4.64.0, != 4.65.0, != 4.65.1, >= 4.76.0, < 5.0.0"
   hashes = [
     "h1:BkdCMbyvAkOMslh6tGz+5K/bsziWUmZvt+4pfR3xtA4=",
+    "h1:e3xRpb/Up56rUeS8U1S4VoGVnXZpmUlHJiVxffGS8/8=",
     "zh:0c17bd21a0d98a5063b5bbdad0feac559913061264953d96b3b82289b9938d83",
     "zh:138dd45494953f6ce0f837ab29ca61ff91e2001e7cf49356021a962030ccf217",
     "zh:1846d617cd39cc7da60280686e1ba63239a4a200f30386dd66a633ea5789e307",
@@ -44,6 +47,7 @@ provider "registry.terraform.io/hashicorp/kubernetes" {
   version     = "2.23.0"
   constraints = "~> 2.10"
   hashes = [
+    "h1:arTzD0XG/DswGCAx9JEttkSKe9RyyFW9W7UWcXF13dU=",
     "h1:cMs2scNCSgQhGamomGT5Ag4i8ms/mql1AR7NJc2hmbA=",
     "zh:10488a12525ed674359585f83e3ee5e74818b5c98e033798351678b21b2f7d89",
     "zh:1102ba5ca1a595f880e67102bbf999cc8b60203272a078a5b1e896d173f3f34b",
@@ -62,8 +66,9 @@ provider "registry.terraform.io/hashicorp/kubernetes" {
 
 provider "registry.terraform.io/hashicorp/random" {
   version     = "3.5.1"
-  constraints = ">= 2.1.0"
+  constraints = ">= 2.1.0, ~> 3.0"
   hashes = [
+    "h1:IL9mSatmwov+e0+++YX2V6uel+dV6bn+fC/cnGDK3Ck=",
     "h1:sZ7MTSD4FLekNN2wSNFGpM+5slfvpm5A/NLVZiB7CO0=",
     "zh:04e3fbd610cb52c1017d282531364b9c53ef72b6bc533acb2a90671957324a64",
     "zh:119197103301ebaf7efb91df8f0b6e0dd31e6ff943d231af35ee1831c599188d",

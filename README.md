@@ -270,6 +270,15 @@ curl -k https://app.example.com --resolve 'app.example.com:443:10.0.0.9' # where
 # CI/CD App Deployment Options
 Your CI server should have access to Artifact Registry repo to push versioned images (with tag) per build. You will then need to update your K8S manifests stored in a separate source repo, updating the image version tag in your `Deployment` manifest and applying to the cluster.
 
+Separate repos for your cloud config, app code, and app k8s config are suggested:
+- org/my-app (source code and `Dockerfile` for app)
+- org/my-app-config (kubernetes manifests for app)
+- org/cloud-config (terraform source)
+
+1. Your CI server would check out or clone the app repo, run tests, build, and push image to registry.
+2. Your CI server would edit the K8S `deployment.yaml` file image version in your app-config repo and push to branch.
+3. Your CD (or CI) would recognize changed app-config, and apply the updated manifest(s) to cluster.
+
 ## VPN Tunnel
 With a Cloud VPN tunnel connecting your CI server network to the Google Cloud VPC Network, it solves the transitive networking issue from peering the managed GKE control plane to the nodes. Add your CI server CIDR range to the `cloud-config/environments/dev/network.tf` for "master_auth_network" config to authorize it to perform `kubectl commands`.
 

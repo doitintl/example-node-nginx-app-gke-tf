@@ -282,6 +282,9 @@ Separate repos for your cloud config, app code, and app k8s config are suggested
 ## VPN Tunnel
 With a Cloud VPN tunnel connecting your CI server network to the Google Cloud VPC Network, it solves the transitive networking issue from peering the managed GKE control plane to the nodes. Add your CI server CIDR range to the `cloud-config/environments/dev/network.tf` for "master_auth_network" config to authorize it to perform `kubectl commands`.
 
+## Cloud Build
+Google Cloud's managed [Cloud Build](https://cloud.google.com/build/docs/overview) could monitor registry changes and handle deployments.
+
 ## Net Proxy
 Dedicating a bastion host within GCP's network, you can install a proxy server and run `kubectl` commands against this host. The [documentation](https://cloud.google.com/kubernetes-engine/docs/archive/creating-kubernetes-engine-private-clusters-with-net-proxies) is dated and other approaches are recommended.
 

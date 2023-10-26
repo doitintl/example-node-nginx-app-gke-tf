@@ -196,10 +196,10 @@ subjectAltName            = @sans_list
 countryName               = US
 stateOrProvinceName       = MT
 localityName              = Missoula
-0.organizationName        = DoiT International
+0.organizationName        = Your Company
 organizationalUnitName    = engineering
 commonName                = app.example.com
-emailAddress              = mike.sparr@doit.com
+emailAddress              = you@example.com
 
 [sans_list]
 DNS.1                     = app.example.com

@@ -1,0 +1,41 @@
+# ingress.yaml
+# ref: https://cloud.google.com/kubernetes-engine/docs/how-to/internal-load-balance-ingress 
+
+# service as NEG
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service
+  namespace: app-ns
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}'
+spec:
+  selector:
+    app: app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP
+---
+# ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  namespace: app-ns
+  annotations:
+    kubernetes.io/ingress.class: "gce-internal"
+    ingress.gcp.kubernetes.io/pre-shared-cert: "app-internal-cert"  # created in setup.sh example
+    kubernetes.io/ingress.allow-http: "false"
+spec:
+  rules:
+  - host: "app.example.com"
+    http:
+      paths:
+      - pathType: ImplementationSpecific
+        backend:
+          service:
+            name: app-service
+            port:
+              number: 80

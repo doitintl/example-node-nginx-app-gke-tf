@@ -127,7 +127,7 @@ bastion_users       = ["user:mike.sparr@doit.com", "user:mike.sparr@doit-intl.co
 ```
 
 ## Authenticating Terraform (TF) with short-lived tokens
-Assuming the logged-in user in the terminal has IAM role permissions to execute the TF commands against the project, we first add a shell environment variable to authenticate TF. We use [short-lived credentials](https://cloud.google.com/iam/docs/create-short-lived-credentials-direct) instead of long-lived service account keys that could be compromised, so they will need to be refreshed after 1 hour if you need to run TF commands throughout the day.
+Assuming the logged-in user in the terminal has IAM role permissions to execute the TF commands against the project, we first add a shell environment variable. We use [short-lived credentials](https://cloud.google.com/iam/docs/create-short-lived-credentials-direct) instead of long-lived service account keys that could be compromised, so they will need to be refreshed after 1 hour if you need to run TF commands throughout the day.
 
 ```bash
 # (optional) set tf env for Apple silicon env

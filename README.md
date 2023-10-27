@@ -151,6 +151,23 @@ Google Cloud Secret Manager secrets created by the TF module create the keys, bu
 
 - [Add a secret version](https://cloud.google.com/secret-manager/docs/add-secret-version)
 
+```
+############################################################
+# create secret versions in secret manager
+# *** assuming secret created by TF in cloud-config/environments/dev ***
+############################################################
+export SECRET_ID="foo"
+export SECRET_VALUE="Super_Secret" # just for demo but would never do this in saved file
+export VERSION_ID="latest"
+
+# add secret version
+echo -n $SECRET_VALUE | \
+    gcloud secrets versions add $SECRET_ID --data-file=-
+  
+# verify
+gcloud secrets versions access $VERSION_ID --secret=$SECRET_ID
+```
+
 ## Pushing Demo Apps To Artifact Registry
 Your CI server will be building and pushing your app images to the registry, but these are commands to test locally (or used in CI scripts).
 

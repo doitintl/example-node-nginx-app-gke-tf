@@ -108,14 +108,14 @@ gcloud storage buckets create gs://$BUCKET_NAME
 ## Configuring Terraform
 There are some configurable variables in the environment directories and you'll either edit the `locals` in the `main.tf` file, or `terraform.tfvars` file (not saved in repo) to customize to your needs. Examples of the settings are below:
 
-### 01_shared/
+### 01_shared/terraform.tfvars
 ```
 project_id    = "mike-test-cmdb-gke"
 region        = "us-central1"
 repository_id = "mike-test-repo"
 ```
 
-### dev/
+### dev/terraform.tfvars
 ```
 project_id          = "mike-test-cmdb-gke"
 registry_project_id = "mike-test-cmdb-gke" # suggest using shared project instead

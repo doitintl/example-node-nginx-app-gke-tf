@@ -146,6 +146,40 @@ terraform apply
 cd $BASE_DIR # to return
 ```
 
+### Optional service account impersonation
+A common practice is to define a service account for executing TF code. You can use [service account impersonation](https://cloud.google.com/iam/docs/service-account-impersonation) for your logged-in user, as long as you have the Service Account Token Creator role granted. 
+
+```bash
+# impersonate sa
+gcloud config set auth/impersonate_service_account SERVICE_ACCT_EMAIL
+
+# execute your TF commands (assume short-lived token env var created above first)
+
+# return back to original user
+gcloud config unset auth/impersonate_service_account
+```
+
+Below are the IAM roles I typically assign to the TF service account (i.e. `tf-admin-sa@PROJECT_ID.iam.gserviceaccount.com`):
+
+- Billing Account User (`roles/billing.user`)
+- Compute Instance Admin (`roles/compute.instanceAdmin`)
+- Compute Network User (`roles/compute.networkUser`)
+- Compute Shared VPC Admin (`roles/compute.xpnAdmin`)
+- Security Admin (`roles/compute.securityAdmin`)
+- Create Service Accounts (`roles.iam.serviceAccountCreator`)
+- Delete Service Accounts (`roles.iam.serviceAccountDeleter`)
+- Service Account User (`roles.iam.serviceAccountUser`)
+- Service Account Token Creator (`roles.iam.serviceAccountTokenCreator`)
+- Logs Configuration Writer (`roles/logging.configWriter`)
+- Folder Creator (`roles/resourcemanager.folderCreator`)
+- Folder Editor (`roles/resourcemanager.folderEditor`)
+- Project Creator (`roles/resourcemanager.projectCreator`)
+- Project Deleter (`roles/resourcemanager.projectDeleter`)
+- Access Context Manager Editor (`roles/accesscontextmanager.policyEditor`)
+- Organization Policy Admin (`roles/orgpolicy.policyAdmin`)
+- Monitoring NotificationChannel Editor (`roles/monitoring.notificationChannelEditor`)
+- Monitoring AlertPolicy Editor (`roles/monitoring.alertPolicyEditor`)
+
 ## Creating Secrets
 Google Cloud Secret Manager secrets created by the TF module create the keys, but the actual stored values (a.k.a. `versions`) should be created by your team either in the console or command line. For security purposes it's not recommended to explicitly declare them in TF code, or persist in source repos.
 

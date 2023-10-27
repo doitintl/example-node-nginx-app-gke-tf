@@ -48,10 +48,10 @@ This repository includes examples to bootstrap a Google Cloud environment (proje
     - see also Private Access
 
 # Usage
-These steps are illustrated within the `setup.sh` file which I treat as "breadcrumbs" of commands I ran to configure and test this demo. The script, although an `.sh` file is not meant to ran as a single script, just a collection of snippets ran in a terminal one after another.
+These steps are illustrated within the `setup.sh` file which I treat as "breadcrumbs" of commands I ran to configure and test this demo. The script, although an `.sh` file is not meant to run as a single script, just a collection of snippets ran in a terminal one after another.
 
 ## Bootstrapping your project
-Personally I prefer to create projects with `gcloud` CLI, separately from Terraform, just to avoid risk of a Terraform issue that potentially deletes a project.
+Personally I prefer to create projects with `gcloud` [CLI](https://cloud.google.com/sdk/docs/install), separately from Terraform, just to avoid risk of a Terraform issue that potentially deletes a project.
 
 ```bash
 PROJECT_ID="mike-test-cmdb-gke"
@@ -80,7 +80,7 @@ gcloud services enable compute.googleapis.com \
 It is possible, however, to create projects (and service projects connected to host projects using Shared VPC) with the [Project Factory module](https://registry.terraform.io/modules/terraform-google-modules/project-factory/google/latest).
 
 ## Bootstrapping terminal / shell
-Once you have a project created, some useful environment variables and `gcloud` SDK configurations can be set.
+Once you have a project created, some useful environment variables and `gcloud` [SDK](https://cloud.google.com/sdk/docs/install) configurations can be set.
 
 ```bash
 PROJECT_ID=$(gcloud config get-value project)
